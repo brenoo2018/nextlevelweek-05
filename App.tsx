@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   useFonts,
   Jost_400Regular,
@@ -13,8 +13,6 @@ export default function App() {
     Jost_400Regular,
     Jost_600SemiBold,
   });
-
-  console.log('fontt-->', fontsLoaded);
 
   if (!fontsLoaded) {
     <AppLoading />;

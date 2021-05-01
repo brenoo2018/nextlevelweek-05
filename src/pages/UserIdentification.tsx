@@ -38,6 +38,7 @@ export function UserIdentification() {
   }
 
   function handleSubmit() {
+    if (!name) return;
     navigation.navigate('Confirmation');
   }
 
@@ -51,7 +52,7 @@ export function UserIdentification() {
           <View style={styles.content}>
             <View style={styles.form}>
               <View style={styles.formHeader}>
-                <Text style={styles.emoji}>😄</Text>
+                <Text style={styles.emoji}>{isFilled ? '😄' : '😃'}</Text>
                 <Text style={styles.formTitle}>
                   Como podemos {'\n'} chamar você?
                 </Text>
