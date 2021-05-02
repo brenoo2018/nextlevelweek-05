@@ -6,7 +6,7 @@
 Projeto de um aplicativo utilizando React Native desenvolvido durante a NLW #5 oferecido pela RocketSeat.
 </h4>
 
-![](https://github.com/brenoo2018/plantmanager/blob/main/src/assets/preview.png)
+![](https://github.com/brenoo2018/plantmanager/blob/main/assets/preview.png)
 
 **Link figma:** https://www.figma.com/file/IhQRtrOZdu3TrvkPYREzOy/PlantManager/duplicate?node-id=0%3A1
 
@@ -17,7 +17,7 @@ Projeto de um aplicativo utilizando React Native desenvolvido durante a NLW #5 o
   <li> Dentro da pasta, execute: `yarn` para instalar as dependências </li>
   <li> `expo start` para executar o projeto </li>
   <li> `json-server ./src/services/server.json --host "seu_ip_aqui" --port 3333` para executar o servidor </li>
-    <li> `src/services/api.ts` troque a baseURL para o seu ip </li>
+  <li> `src/services/api.ts` troque a baseURL para o seu ip </li>
 </ul>
 
 ## 💬 Funcionalidades
