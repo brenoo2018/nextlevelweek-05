@@ -6,7 +6,7 @@
 Projeto de um aplicativo utilizando React Native desenvolvido durante a NLW #5 oferecido pela RocketSeat.
 </h4>
 
-![](https://github.com/brenoo2018/plantmanager/blob/main/assets/preview.png)
+![](https://github.com/brenoo2018/plantmanager/blob/main/src/assets/preview.png)
 
 **Link figma:** https://www.figma.com/file/IhQRtrOZdu3TrvkPYREzOy/PlantManager/duplicate?node-id=0%3A1
 
