@@ -52,12 +52,10 @@ export function PlantSelect() {
 
   async function fetchPlants() {
     const { data } = await api.get(
-      `plants?_sort=name&_order=asc&_page=${page}&_limit=8`
+      `plants?_sort=name&order=asc&_page=${page}&_limit=8`
     );
 
-    if (!data) {
-      return setLoading(false);
-    }
+    if (!data) return setLoading(true);
 
     if (page > 1) {
       setPlants((oldValue) => [...oldValue, ...data]);
@@ -69,7 +67,6 @@ export function PlantSelect() {
 
     setLoading(false);
     setLoadingMore(false);
-    fetchPlants();
   }
 
   function handleFetchMore(distance: number) {
@@ -77,6 +74,7 @@ export function PlantSelect() {
 
     setLoadingMore(true);
     setPage((oldValue) => oldValue + 1);
+    fetchPlants();
   }
 
   function handlePlantSelected(plant: PlantProps) {

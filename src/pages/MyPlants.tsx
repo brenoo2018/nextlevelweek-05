@@ -1,26 +1,61 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Image, Text, FlatList, Alert } from 'react-native';
-
-import { formatDistance } from 'date-fns';
+import { StyleSheet, View, Image, Text, Alert, ScrollView } from 'react-native';
+import { PlantProps, loadPlant, removePlant } from '../libs/storage';
+import { formatDistance } from 'date-fns/esm';
 import { ptBR } from 'date-fns/locale';
 
 import { Header } from '../components/Header';
-
-import { loadPlant, PlantProps } from '../libs/storage';
-
-import colors from '../styles/colors';
-import fonts from '../styles/fonts';
-import waterdrop from '../assets/waterdrop.png';
 import { PlantCardSecondary } from '../components/PlantCardSecondary';
+import { Load } from '../components/Load';
+
+import waterdrop from '../assets/waterdrop.png';
+import colors from '../styles/colors';
 
 export function MyPlants() {
   const [myPlants, setMyPlants] = useState<PlantProps[]>([]);
   const [loading, setLoading] = useState(true);
+  const [remove, setRemove] = useState(false);
   const [nextWatered, setNextWatered] = useState<string>();
 
+  function handleRemove(plant: PlantProps) {
+    Alert.alert('Remover', `Deseja remover ${plant.name}`, [
+      {
+        text: 'Não',
+        style: 'cancel',
+      },
+      {
+        text: 'Sim',
+        onPress: async () => {
+          try {
+            await removePlant(plant.id);
+            setMyPlants((oldData) =>
+              oldData.filter((item) => item.id != plant.id)
+            );
+            setRemove(true);
+            setRemove(false);
+          } catch (error) {
+            setRemove(false);
+            Alert.alert('Não foi possível remover!');
+          }
+        },
+      },
+    ]);
+  }
+
   useEffect(() => {
-    async function loadStorageData() {
+    loadStorageData();
+  }, [remove]);
+
+  async function loadStorageData() {
+    try {
       const plantsStoraged = await loadPlant();
+
+      if (plantsStoraged.length === 0) {
+        setNextWatered('Não há plantas para regar');
+        setMyPlants(plantsStoraged);
+        setLoading(false);
+        return;
+      }
 
       const nextTime = formatDistance(
         new Date(plantsStoraged[0].dateTimeNotification).getTime(),
@@ -29,15 +64,17 @@ export function MyPlants() {
       );
 
       setNextWatered(
-        `Não esqueça de regar a ${plantsStoraged[0].name} à ${nextTime}`
+        `Não esqueça de regar a ${plantsStoraged[0].name} em ${nextTime}`
       );
 
       setMyPlants(plantsStoraged);
       setLoading(false);
+    } catch (error) {
+      console.log('oii', error);
     }
+  }
 
-    loadStorageData();
-  }, []);
+  if (loading) return <Load />;
 
   return (
     <View style={styles.container}>
@@ -52,17 +89,22 @@ export function MyPlants() {
       <View style={styles.plants}>
         <Text style={styles.plantsTitle}>Próximas regadas</Text>
 
-        <FlatList
-          data={myPlants}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => <PlantCardSecondary data={item} />}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flex: 1 }}
-        />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {myPlants.map((item) => {
+            return (
+              <PlantCardSecondary
+                key={item.id}
+                handleRemove={() => handleRemove(item)}
+                data={item}
+              />
+            );
+          })}
+        </ScrollView>
       </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -72,6 +114,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     backgroundColor: colors.background,
   },
+
   spotlight: {
     backgroundColor: colors.blue_light,
     paddingHorizontal: 20,
@@ -81,22 +124,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+
   spotlightImage: {
     width: 60,
     height: 60,
   },
+
   spotlightText: {
     flex: 1,
-    color: colors.blue,
+    color: colors.heading,
     paddingHorizontal: 20,
   },
+
   plants: {
     flex: 1,
     width: '100%',
   },
+
   plantsTitle: {
     fontSize: 24,
-    fontFamily: fonts.heading,
     color: colors.heading,
     marginVertical: 20,
   },
